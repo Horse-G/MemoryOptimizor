@@ -47,30 +47,44 @@ public class Main {
                         A[i].b=true;
                     }
                 }
+                System.out.println("Step one result:=============");
+                printNodeArray();
 
-                //print Node
+                //second step update
                 for(int i=0;i<A.length;i++){
-                    System.out.println("======Node"+i+" ==========");
-                    for(int j=0;j<A[i].bitmap.length;j++){
-                        System.out.print(A[i].bitmap[j]);
+                    //i is the corresponding s in the algorithm
+                    for(int j=0;j<A.length;j++){
+                        //j is the corresponding s' in the algorithm
+                        //make sure there is no intersection between two set
+                        if(intersect(A[i].bitmap, A[j].bitmap))
+                            continue;
+                        if(Pair.dominate(c_matrix(A[i].leftMostLeave()), c_matrix(A[j]))){
+                            //do nothing according to the algorithm
+                        }else{
+
+                            if(A[j].p<=0.5&&compareLeave(A[j],A[i])){
+                                //compareLeave function take (s',s)
+                                //do nothing according to the algorithm
+                            }else{
+                                double cost = fcost(A[j])+m*Math.min(A[j].p,1-A[j].p)+A[j].p*A[i].c;
+                                int index = findUnionIndex(A[i],A[j]);
+                                if(cost<A[index].c){
+                                    A[index].c=cost;
+                                    A[index].L=A[j];
+                                    A[index].R=A[i];
+                                }
+                            }
+                        }
+
                     }
-                    System.out.println();
-                    System.out.println("n; "+A[i].n);
-                    System.out.println("c: "+A[i].c);
-                    System.out.println("b: "+ A[i].b);
-                    System.out.println("p: "+A[i].p);
-                    //System.out.println(A[i].toString());
-                }
-                System.out.println("*************************************");
-                /*
-                ArrayList<ArrayList<Double>> result = subset(S);
-                int i=0;
-                for(ArrayList<Double> a: result){
-                    A[i].subset=a;
-                    A[i].n=  a.size();
 
                 }
-*/
+                System.out.println("Second Step Result:=============");
+                printNodeArray();
+                System.out.println("Final Node: ****************");
+                printNode(A[A.length - 1]);
+                //printNode();
+
 
             }
         }catch(Exception e){
@@ -82,12 +96,34 @@ public class Main {
 
     }
 
-    private static double c_matrix(){
-        return 0.0;
+    //supporting functions group
+    private static int findUnionIndex(Node A, Node B){
+        int[] result = new int[A.bitmap.length];
+        for(int i=0;i<result.length;i++){
+            if(A.bitmap[i]==1||B.bitmap[i]==1)
+                result[i]=1;
+        }
+        return toDecimal(result);
     }
 
-    private static double d_matrix(){
-        return 0.0;
+    private static boolean compareLeave(Node A, Node B){
+        //return true if any leave node of B is dominating node A
+        ArrayList<Node> leaveNode = B.allLeave();
+        for(Node a: leaveNode){
+            if(Pair.dominate(d_matrix(a),d_matrix(A)))
+                return true;
+        }
+        return false;
+    }
+
+    //operator functions group
+    private static int toDecimal(int[] binary){
+        int result=0;
+        for(int i=0;i<binary.length;i++){
+            if(binary[i]==1)
+                result+=Math.pow(2,binary.length-i-1);
+        }
+        return result;
     }
 
     private static int[] toBinary(int n){
@@ -107,7 +143,17 @@ public class Main {
         return result;
     }
 
+    private static boolean intersect(int[] A, int[] B){
+        //return true if A and B indeed intersect with each other
+        for(int i=0;i<A.length;i++){
+            if((A[i]&B[i])==1)
+                return true;
+        }
+        return false;
+    }
 
+
+    //cost functions group
     private static double noBranchCostFunction(Node node){
         //n is the "k", the number of terms stored in the node,
         //or the "k basic terms" in the algorithm
@@ -123,38 +169,74 @@ public class Main {
         return cost;
     }
 
-    private static ArrayList<ArrayList<Double>> subset(double[] S){
-        if (S==null){
-            return null;
+    private static Pair c_matrix(Node node){
+        Pair result = new Pair((1-node.p)/fcost(node),node.p);
+        return result;
+    }
+
+    private static Pair d_matrix(Node node){
+        Pair result = new Pair(fcost(node),node.p);
+        return result;
+    }
+
+    private static double fcost(Node node){
+        /*
+        if(node.L!=null||node.R!=null){
+            System.out.println("error: node is not a &-term!");
+            return 0.0;
         }
-
-        ArrayList<ArrayList<Double>> result = new ArrayList<ArrayList<Double>>();
-
-        for(int i =0;i<S.length;i++){
-            ArrayList<ArrayList<Double>> buffer = new ArrayList<ArrayList<Double>>();
-
-            for(ArrayList<Double>a:result){
-                buffer.add(new ArrayList<Double>(a));
-            }
-
-            for(ArrayList<Double> a: buffer){
-                a.add(S[i]);
-            }
-
-            ArrayList<Double> newElement = new ArrayList<Double>();
-            newElement.add(S[i]);
-            buffer.add(newElement);
-
-        }
-        result.add(new ArrayList<Double>());
-
+*/
+        double result = node.n*r+(node.n-1)*l+node.n*f+t;
         return result;
 
     }
+
+
     //assign cost parameters from configuration file
     private static void init(String configFile){
         File config = new File(configFile);
         //matching the cost parameters with those in configuration file
+
+    }
+
+    private static void printNodeArray(){
+        //print Node
+        for(int i=0;i<A.length;i++){
+            System.out.println("======Node"+i+" ==========");
+            printNode(A[i]);
+        }
+        System.out.println("*************************************");
+    }
+
+    private static void printNode(Node node){
+        if(node==null)
+            return;
+        //System.out.println("======Node==========");
+        for(int j=0;j<node.bitmap.length;j++){
+            System.out.print(node.bitmap[j]);
+        }
+        System.out.println();
+        System.out.println("n; "+node.n);
+        System.out.println("c: "+node.c);
+        System.out.println("b: "+ node.b);
+        System.out.println("p: "+node.p);
+
+        if(node.L!=null) {
+            System.out.println("LeftNode: ");
+            for (int j = 0; j < node.L.bitmap.length; j++) {
+                System.out.print(node.L.bitmap[j]);
+            }
+            System.out.println();
+        }
+
+        if(node.R!=null) {
+            System.out.println("RightNode: ");
+            for (int j = 0; j < node.R.bitmap.length; j++) {
+                System.out.print(node.R.bitmap[j]);
+            }
+            System.out.println();
+        }
+
 
     }
 }
