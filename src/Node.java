@@ -42,17 +42,6 @@ public class Node {
         }
 
         return result;
-
-        /*
-        for(int i=0;i<this.bitmap.length;i++) {
-            if(this.bitmap[i]==1)
-                result = result + "1";
-            else
-                result = result + "0";
-        }
-        return result;
-         */
-
     }
 
 
@@ -60,33 +49,19 @@ public class Node {
 
         //getLeave(this,result);
         result = new ArrayList<Node>();
-        getLeave1(this);
+        getLeave(this);
         return result;
     }
 
-    private void getLeave1(Node node){
+    private void getLeave(Node node){
         if(node==null)
             return;
         if(node.L==null&&node.R==null)
             result.add(node);
 
+        getLeave(node.L);
+        getLeave(node.R);
 
-        getLeave1(node.L);
-        getLeave1(node.R);
-
-    }
-
-    private void getLeave(Node node,ArrayList<Node> result){
-        if(node==null)
-            return;
-        if(node.L==null&&node.R==null){
-            result.add(node);
-            return;
-        }
-
-        getLeave(node.L,result);
-        getLeave(node.R,result);
-        return;
     }
 
 }

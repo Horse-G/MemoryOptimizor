@@ -10,7 +10,6 @@ public class Main {
     static int r=1,t=2,l=1,m=16,a=2,f=4;    //cost parameters
     static double[] S;
     static int k;              //cardinality of S
-    static Node[][] matrix;    //
     static Node[] A=new Node[5];
 
     public static void main(String[] args) {
@@ -18,7 +17,7 @@ public class Main {
 
         String configFile = "config.txt";
         String queryFile = "query.txt";
-        //init(configFile);
+        init(configFile);
 
         //read in input file
         try{
@@ -234,7 +233,7 @@ public class Main {
     }
 
     private static Pair c_matrix(Node node){
-        Pair result = new Pair((1-node.p)/fcost(node),node.p);
+        Pair result = new Pair((node.p-1)/fcost(node),node.p);
         return result;
     }
 
