@@ -1,4 +1,7 @@
+import sun.awt.image.ImageWatched;
+
 import java.io.File;
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -47,8 +50,8 @@ public class Main {
                         A[i].b=true;
                     }
                 }
-                System.out.println("Step one result:=============");
-                printNodeArray();
+                //System.out.println("Step one result:=============");
+                //printNodeArray();
 
                 //second step update
                 for(int i=0;i<A.length;i++){
@@ -79,11 +82,13 @@ public class Main {
                     }
 
                 }
-                System.out.println("Second Step Result:=============");
+                //System.out.println("Second Step Result:=============");
                 printNodeArray();
-                System.out.println("Final Node: ****************");
+                //System.out.println("Final Node: ****************");
                 printNode(A[A.length - 1]);
                 //printNode();
+
+                getResult(A[A.length - 1]);
 
 
             }
@@ -114,6 +119,65 @@ public class Main {
                 return true;
         }
         return false;
+    }
+
+    private static void getResult(Node node){
+        LinkedList<Node> result = new LinkedList<Node>();
+        if(node.L==null&&node.R==null){
+            result.push(node);
+            resultString(result);
+            return;
+        }
+
+        result.push(node.L);
+        result.push(new Node());
+        result.push(node.R);
+
+        while(result.peek().L!=null||result.peek().R!=null){
+            Node temp = result.pop();
+            result.push(temp.L);
+            result.push(new Node());
+            result.push(temp.R);
+        }
+       //printResult(result);
+        resultString(result);
+    }
+
+    private static String resultString(LinkedList<Node> queue){
+        String result;
+        if(queue.peek().b){
+            //System.out.println(queue.peek().toString()+ "is no branching");
+            String NoBranching = queue.pop().toString();
+            System.out.println("No Branching: " + NoBranching);
+            if(queue.peek().n==0){
+                queue.pop();
+            }
+        }
+
+        result = queue.pop().toString();
+        while(!queue.isEmpty()){
+            if(queue.peek().n==0){
+                queue.pop();
+                result="("+queue.pop().toString()+"&&"+result+")";
+            }
+        }
+        System.out.println(result);
+        return result;
+
+    }
+
+    private static void printResult(LinkedList<Node> result){
+        System.out.println("Result Queue"+result.size());
+        int size = result.size();
+        for(int i=0;i<size;i++) {
+            System.out.println("Node " + i);
+            if (result.get(size-1-i).n == 0) {
+                System.out.println("&&");
+            } else {
+                printNode(result.get(size-1-i));
+            }
+        }
+
     }
 
     //operator functions group
@@ -180,7 +244,7 @@ public class Main {
     }
 
     private static double fcost(Node node){
-        /*
+/*
         if(node.L!=null||node.R!=null){
             System.out.println("error: node is not a &-term!");
             return 0.0;

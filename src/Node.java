@@ -27,6 +27,35 @@ public class Node {
         return temp;
     }
 
+    public String toString(){
+        String result="";
+
+        for(int i=0;i<this.bitmap.length;i++) {
+            if(this.bitmap[i]==1)
+                result = result + "C"+(i+1)+"&";
+        }
+
+        result=result.substring(0,result.length()-1);
+
+        if(this.n>1){
+            result="("+result+")";
+        }
+
+        return result;
+
+        /*
+        for(int i=0;i<this.bitmap.length;i++) {
+            if(this.bitmap[i]==1)
+                result = result + "1";
+            else
+                result = result + "0";
+        }
+        return result;
+         */
+
+    }
+
+
     public ArrayList<Node> allLeave(){
 
         //getLeave(this,result);
