@@ -25,7 +25,8 @@ public class Main {
             Scanner in = new Scanner(query);
 
             while(in.hasNextLine()){
-                String[] buffer = in.nextLine().split("\\s+");
+                String input = in.nextLine();
+                String[] buffer = input.split("\\s+");
                 k = buffer.length;
                 S=new double[k];
                 for(int i=0;i<k;i++){
@@ -81,13 +82,32 @@ public class Main {
                     }
 
                 }
+
                 //System.out.println("Second Step Result:=============");
-                printNodeArray();
+                //printNodeArray();
                 //System.out.println("Final Node: ****************");
-                printNode(A[A.length - 1]);
+                //printNode(A[A.length - 1]);
                 //printNode();
 
-                getResult(A[A.length - 1]);
+                String[] result = getResult(A[A.length - 1]);
+
+
+
+                //Standard format result output
+                System.out.println("==========================================");
+                System.out.println(input);
+                System.out.println("------------------------------------------");
+                System.out.println("if("+result[0]+") {");
+                if(result[1]==null){
+                    System.out.println("   answer[j++]=i;");
+                }else{
+                    System.out.println("   answer[j]=i;");
+                    System.out.println("   j+=("+result[1]+");");
+                }
+                System.out.println("}");
+                System.out.println("------------------------------------------");
+                System.out.println("cost: "+A[A.length-1].c);
+                System.out.println("==========================================");
 
 
             }
@@ -120,12 +140,12 @@ public class Main {
         return false;
     }
 
-    private static void getResult(Node node){
+    private static String[] getResult(Node node){
         LinkedList<Node> result = new LinkedList<Node>();
         if(node.L==null&&node.R==null){
             result.push(node);
             resultString(result);
-            return;
+            return null;
         }
 
         result.push(node.L);
@@ -139,28 +159,29 @@ public class Main {
             result.push(temp.R);
         }
        //printResult(result);
-        resultString(result);
+        return resultString(result);
+
     }
 
-    private static String resultString(LinkedList<Node> queue){
-        String result;
+    private static String[] resultString(LinkedList<Node> queue){
+        String[] result = new String[2];
         if(queue.peek().b){
             //System.out.println(queue.peek().toString()+ "is no branching");
-            String NoBranching = queue.pop().toString();
-            System.out.println("No Branching: " + NoBranching);
+            result[1] = queue.pop().toString();
+            //System.out.println("No Branching: " + NoBranching);
             if(queue.peek().n==0){
                 queue.pop();
             }
         }
 
-        result = queue.pop().toString();
+        result[0] = queue.pop().toString();
         while(!queue.isEmpty()){
             if(queue.peek().n==0){
                 queue.pop();
-                result="("+queue.pop().toString()+"&&"+result+")";
+                result[0]="("+queue.pop().toString()+"&&"+result[0]+")";
             }
         }
-        System.out.println(result);
+        //System.out.println(result);
         return result;
 
     }
@@ -259,7 +280,23 @@ public class Main {
     private static void init(String configFile){
         File config = new File(configFile);
         //matching the cost parameters with those in configuration file
-
+        try {
+            Scanner in = new Scanner(config);
+            String buffer = in.nextLine();
+            r = Integer.parseInt(buffer.substring(buffer.indexOf("=")+1).trim());
+            buffer = in.nextLine();
+            t = Integer.parseInt(buffer.substring(buffer.indexOf("=")+1).trim());
+            buffer = in.nextLine();
+            l = Integer.parseInt(buffer.substring(buffer.indexOf("=")+1).trim());
+            buffer = in.nextLine();
+            m = Integer.parseInt(buffer.substring(buffer.indexOf("=")+1).trim());
+            buffer = in.nextLine();
+            a = Integer.parseInt(buffer.substring(buffer.indexOf("=")+1).trim());
+            buffer = in.nextLine();
+            f = Integer.parseInt(buffer.substring(buffer.indexOf("=")+1).trim());
+        }catch(Exception e){
+            System.err.println("error in reading config file"+ e.toString());
+        }
     }
 
     private static void printNodeArray(){

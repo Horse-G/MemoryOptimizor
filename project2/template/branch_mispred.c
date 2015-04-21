@@ -205,7 +205,7 @@ int main(int argc, char * argv[]) {
 
 double get_timestamp(double start_time) {
   struct timeval tp;
-  // struct timeval *tp = (struct timeval*)malloc(sizeof(struct timeval*));
+  struct timeval *tp = (struct timeval*)malloc(sizeof(struct timeval*));
   if (gettimeofday(&tp, NULL) == 0) {
     return (double)tp.tv_sec + (double)tp.tv_usec * 1e-6 - start_time;
   } else {

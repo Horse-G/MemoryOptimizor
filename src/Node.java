@@ -32,7 +32,7 @@ public class Node {
 
         for(int i=0;i<this.bitmap.length;i++) {
             if(this.bitmap[i]==1)
-                result = result + "C"+(i+1)+"&";
+                result = result + "t"+(i+1)+"[o"+(i+1)+"[i]]&";
         }
 
         result=result.substring(0,result.length()-1);
