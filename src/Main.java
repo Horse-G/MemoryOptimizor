@@ -18,9 +18,10 @@ public class Main {
         }
         String configFile = "config.txt";
         String queryFile = "query.txt";
-        init(configFile);
 
         //read in input file
+        init(configFile);
+
         try{
             File query = new File(queryFile);
             Scanner in = new Scanner(query);
@@ -115,92 +116,9 @@ public class Main {
 
     }
 
-    //supporting functions group
-
-    //Takes as arguments 2 set nodes and returns the index in array A of their union set
-    private static int findUnionIndex(Node A, Node B){
-        int[] result = new int[A.bitmap.length];
-        for(int i=0;i<result.length;i++){
-            if(A.bitmap[i]==1||B.bitmap[i]==1)
-                result[i]=1;
-        }
-        return toDecimal(result);
-    }
-
-    //Returns true if the d-metric of any leaf node of B is dominating node A
-    private static boolean compareLeave(Node A, Node B){
-        //return true if any leave node of B is dominating node A
-        ArrayList<Node> leaveNode = B.allLeave();
-        for(Node a: leaveNode){
-            if(Pair.dominate(d_metric(a),d_metric(A)))
-                return true;
-        }
-        return false;
-    }
-
-
-    //Used for creating a LinkedList of all resultant nodes in order to get the optimal query plan. It calls the resultString method and passed this LinkedList as an argument
-    private static String[] getResult(Node node){
-        LinkedList<Node> result = new LinkedList<Node>();
-        if(node.L==null&&node.R==null){
-            result.push(node);
-            return resultString(result);
-        }
-        result.push(node.L);
-        result.push(new Node());
-        result.push(node.R);
-
-        while(result.peek().L!=null||result.peek().R!=null){
-            Node temp = result.pop();
-            result.push(temp.L);
-            result.push(new Node());
-            result.push(temp.R);
-        }
-       //printResult(result);
-        return resultString(result);
-    }
-
-    //Returns the result in the form of a string
-    private static String[] resultString(LinkedList<Node> queue){
-        String[] result = new String[2];
-        if(queue.peek().b){
-            //System.out.println(queue.peek().toString()+ "is no branching");
-            result[1] = queue.pop().toString();
-            //System.out.println("No Branching: " + NoBranching);
-            if(queue.size()!=0&&queue.peek().n==0){
-                queue.pop();
-            }
-        }
-        if(queue.size()==0){
-            result[0]=new Node().toString();
-            return result;
-        }
-        result[0] = queue.pop().toString();
-        while(!queue.isEmpty()){
-            if(queue.peek().n==0){
-                queue.pop();
-                result[0]="("+queue.pop().toString()+"&&"+result[0]+")";
-            }
-        }
-        //System.out.println(result);
-        return result;
-    }
-
-    //Prints the resultant plan
-    private static void printResult(LinkedList<Node> result){
-        System.out.println("Result Queue"+result.size());
-        int size = result.size();
-        for(int i=0;i<size;i++) {
-            System.out.println("Node " + i);
-            if (result.get(size-1-i).n == 0) {
-                System.out.println("&&");
-            } else {
-                printNode(result.get(size-1-i));
-            }
-        }
-    }
 
     //operator functions group
+    //************************************************************************
 
     //Used for converting a binary number to decimal
     private static int toDecimal(int[] binary){
@@ -240,8 +158,29 @@ public class Main {
         return false;
     }
 
+    //Takes as arguments 2 set nodes and returns the index in array A of their union set
+    private static int findUnionIndex(Node A, Node B){
+        int[] result = new int[A.bitmap.length];
+        for(int i=0;i<result.length;i++){
+            if(A.bitmap[i]==1||B.bitmap[i]==1)
+                result[i]=1;
+        }
+        return toDecimal(result);
+    }
+
+    //Returns true if the d-metric of any leaf node of B is dominating node A
+    private static boolean compareLeave(Node A, Node B){
+        //return true if any leave node of B is dominating node A
+        ArrayList<Node> leaveNode = B.allLeave();
+        for(Node a: leaveNode){
+            if(Pair.dominate(d_metric(a),d_metric(A)))
+                return true;
+        }
+        return false;
+    }
 
     //cost functions group
+    //************************************************************************
 
     //Calculates the cost function in the case of no branch
     private static double noBranchCostFunction(Node node){
@@ -285,9 +224,72 @@ public class Main {
         return result;
     }
 
+    //supporting functions group
+    //************************************************************************************
+
+    //Used for creating a LinkedList of all resultant nodes in order to get the optimal query plan. It calls the resultString method and passed this LinkedList as an argument
+    private static String[] getResult(Node node){
+        LinkedList<Node> result = new LinkedList<Node>();
+        if(node.L==null&&node.R==null){
+            result.push(node);
+            return resultString(result);
+        }
+        result.push(node.L);
+        result.push(new Node());
+        result.push(node.R);
+
+        while(result.peek().L!=null||result.peek().R!=null){
+            Node temp = result.pop();
+            result.push(temp.L);
+            result.push(new Node());
+            result.push(temp.R);
+        }
+        //printResult(result);
+        return resultString(result);
+    }
+
+    //Returns the result in the form of a string
+    private static String[] resultString(LinkedList<Node> queue){
+        String[] result = new String[2];
+        if(queue.peek().b){
+            //System.out.println(queue.peek().toString()+ "is no branching");
+            result[1] = queue.pop().toString();
+            //System.out.println("No Branching: " + NoBranching);
+            if(queue.size()!=0&&queue.peek().n==0){
+                queue.pop();
+            }
+        }
+        if(queue.size()==0){
+            result[0]=new Node().toString();
+            return result;
+        }
+        result[0] = queue.pop().toString();
+        while(!queue.isEmpty()){
+            if(queue.peek().n==0){
+                queue.pop();
+                result[0]="("+queue.pop().toString()+"&&"+result[0]+")";
+            }
+        }
+        //System.out.println(result);
+        return result;
+    }
+
+    //Prints the resultant plan
+    private static void printResult(LinkedList<Node> result){
+        System.out.println("Result Queue"+result.size());
+        int size = result.size();
+        for(int i=0;i<size;i++) {
+            System.out.println("Node " + i);
+            if (result.get(size-1-i).n == 0) {
+                System.out.println("&&");
+            } else {
+                printNode(result.get(size-1-i));
+            }
+        }
+    }
+
 
     //assign cost parameters from configuration file
-
     //User for initialization of the config parameters from the config.txt file
     private static void init(String configFile){
         File config = new File(configFile);

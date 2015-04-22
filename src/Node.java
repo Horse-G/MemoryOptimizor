@@ -14,11 +14,12 @@ public class Node {
     ArrayList<Node> result = new ArrayList<Node>();
 
     //Constructor
-
     public Node(){
 
     }
 
+    //return the left most leave node of the tree
+    //in support of the c_metric comparison
     public Node leftMostLeave(){
         Node temp = this;
         while(temp.L!=null){
@@ -27,18 +28,19 @@ public class Node {
         return temp;
     }
 
+    //Convert the Node into printable format
     public String toString(){
         String result="";
-
+        //if the node is empty
         if(this.c==Integer.MAX_VALUE){
             return " ";
         }
-
+        //match the bitmap to &-term
         for(int i=0;i<this.bitmap.length;i++) {
             if(this.bitmap[i]==1)
                 result = result + "t"+(i+1)+"[o"+(i+1)+"[i]]&";
         }
-
+        //get ride of the last "&" term
         result=result.substring(0,result.length()-1);
 
         if(this.n>1){
@@ -48,15 +50,13 @@ public class Node {
         return result;
     }
 
-
+    //return all the leave nodes for a particular node
     public ArrayList<Node> allLeave(){
-
-        //getLeave(this,result);
         result = new ArrayList<Node>();
         getLeave(this);
         return result;
     }
-
+    //supporting function for get leave node
     private void getLeave(Node node){
         if(node==null)
             return;
