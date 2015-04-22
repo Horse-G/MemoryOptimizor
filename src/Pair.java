@@ -1,7 +1,7 @@
-/**
- * Created by Marshal on 4/13/15.
- */
+//Used for checking domination conditions in the case od c and d metrics
+
 public class Pair {
+
     double q;
     double p;
     public Pair(){
