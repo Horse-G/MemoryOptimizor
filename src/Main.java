@@ -7,7 +7,8 @@ import java.util.ArrayList;
 
 public class Main {
 
-    static int r=1,t=2,l=1,m=16,a=2,f=4;    //cost parameters
+    //static int r=1,t=2,l=1,m=16,a=2,f=4;    //cost parameters
+    static int r,t,l,m,a,f;
     static double[] S;
     static int k;              //cardinality of S
     static Node[] A=new Node[5];
@@ -121,6 +122,8 @@ public class Main {
     }
 
     //supporting functions group
+
+    //Takes as arguments 2 set nodes and returns the index in array A of their union set
     private static int findUnionIndex(Node A, Node B){
         int[] result = new int[A.bitmap.length];
         for(int i=0;i<result.length;i++){
@@ -130,6 +133,7 @@ public class Main {
         return toDecimal(result);
     }
 
+    //Returns true if the d-metric of any leaf node of B is dominating node A
     private static boolean compareLeave(Node A, Node B){
         //return true if any leave node of B is dominating node A
         ArrayList<Node> leaveNode = B.allLeave();
@@ -140,6 +144,8 @@ public class Main {
         return false;
     }
 
+
+    //Used for creating a LinkedList of all resultant nodes in order to get the optimal query plan. It calls the resultString method and passed this LinkedList as an argument
     private static String[] getResult(Node node){
         LinkedList<Node> result = new LinkedList<Node>();
         if(node.L==null&&node.R==null){
@@ -163,6 +169,7 @@ public class Main {
 
     }
 
+    //Returns the result in the form of a string
     private static String[] resultString(LinkedList<Node> queue){
         String[] result = new String[2];
         if(queue.peek().b){
@@ -186,6 +193,7 @@ public class Main {
 
     }
 
+    //Prints the resultant plan
     private static void printResult(LinkedList<Node> result){
         System.out.println("Result Queue"+result.size());
         int size = result.size();
@@ -201,6 +209,8 @@ public class Main {
     }
 
     //operator functions group
+
+    //Used for converting a binary number to decimal
     private static int toDecimal(int[] binary){
         int result=0;
         for(int i=0;i<binary.length;i++){
@@ -210,6 +220,7 @@ public class Main {
         return result;
     }
 
+    //Used for converting a decimal number to binary
     private static int[] toBinary(int n){
         int[] result = new int[k];
         int s,i=0;
@@ -227,6 +238,7 @@ public class Main {
         return result;
     }
 
+    //Returns true if A and B intersect with each other
     private static boolean intersect(int[] A, int[] B){
         //return true if A and B indeed intersect with each other
         for(int i=0;i<A.length;i++){
@@ -238,6 +250,8 @@ public class Main {
 
 
     //cost functions group
+
+    //Calculates the cost function in the case of no branch
     private static double noBranchCostFunction(Node node){
         //n is the "k", the number of terms stored in the node,
         //or the "k basic terms" in the algorithm
@@ -246,6 +260,7 @@ public class Main {
         return cost;
     }
 
+    //Calculates the cost function in the case of logical AND
     private static double logicalAndCostFunction(Node node){
         double cost=0, q=0;
         q = (node.p<=0.5)? node.p : 1-node.p;
@@ -253,16 +268,19 @@ public class Main {
         return cost;
     }
 
+    //Calculates c-metric
     private static Pair c_matrix(Node node){
         Pair result = new Pair((node.p-1)/fcost(node),node.p);
         return result;
     }
 
+    //Calculates d-metric
     private static Pair d_matrix(Node node){
         Pair result = new Pair(fcost(node),node.p);
         return result;
     }
 
+    //Calculates the f-cost of a set
     private static double fcost(Node node){
 /*
         if(node.L!=null||node.R!=null){
@@ -277,6 +295,8 @@ public class Main {
 
 
     //assign cost parameters from configuration file
+
+    //User for initialization of the config parameters from the config.txt file
     private static void init(String configFile){
         File config = new File(configFile);
         //matching the cost parameters with those in configuration file
@@ -299,6 +319,7 @@ public class Main {
         }
     }
 
+    //User for printing all the nodes. It calls the printNode method
     private static void printNodeArray(){
         //print Node
         for(int i=0;i<A.length;i++){
@@ -308,6 +329,7 @@ public class Main {
         System.out.println("*************************************");
     }
 
+    //Used for printing the various attributes of  a node. This was used for testing purposes
     private static void printNode(Node node){
         if(node==null)
             return;
