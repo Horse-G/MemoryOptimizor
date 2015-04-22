@@ -1,0 +1,1 @@
+README(A) Team Members:Meril Dsouza (msd2178)Xiaoqian Ma (xm2164)(B) Files Included:Main.javaNode.javaPair.javaMakefilestage2.shquery.txtconfig.txtexecutionOutput.txt(C) How to Run Program:To run the program, execute the following commands:make./stage2.sh query.txt config.txt
