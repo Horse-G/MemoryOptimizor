@@ -12,6 +12,10 @@ public class Main {
 
     public static void main(String[] args) {
 
+        if(args.length<2) {
+            System.out.println("requires 2 files input: config.txt, query.txt");
+            return;
+        }
         String configFile = "config.txt";
         String queryFile = "query.txt";
         init(configFile);
@@ -92,12 +96,12 @@ public class Main {
                 System.out.println("==========================================");
                 System.out.println(input);
                 System.out.println("------------------------------------------");
-                System.out.println("if"+result[0]+" {");
+                System.out.println("if("+result[0]+") {");
                 if(result[1]==null){
                     System.out.println("   answer[j++]=i;");
                 }else{
                     System.out.println("   answer[j]=i;");
-                    System.out.println("   j+="+result[1]+";");
+                    System.out.println("   j+=("+result[1]+");");
                 }
                 System.out.println("}");
                 System.out.println("------------------------------------------");
