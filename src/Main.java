@@ -13,11 +13,12 @@ public class Main {
     public static void main(String[] args) {
 
         if(args.length<2) {
-            System.out.println("requires 2 files input: config.txt, query.txt");
+            System.out.println("requires 2 files input: query.txt,config.txt");
             return;
         }
-        String configFile = "config.txt";
-        String queryFile = "query.txt";
+
+        String queryFile = args[0];
+        String configFile = args[1];
 
         //read in input file
         init(configFile);
@@ -64,17 +65,25 @@ public class Main {
                         if(intersect(A[i].bitmap, A[j].bitmap))
                             continue;
                         if(Pair.dominate(c_metric(A[i].leftMostLeave()), c_metric(A[j]))){
+                            //s.c<s'.c ==> current sequence is fine, no need for update
                             //do nothing according to the algorithm
                         }else{
-
+                            //s'.c<s.c
                             if(A[j].p<=0.5&&compareLeave(A[j],A[i])){
                                 //compareLeave function take (s',s)
+                                // if any child of s is cheaper(dominating) s'
+                                //return true
+
+                                //any node(s) of s has a smaller cost of s'
+                                //==> current sequence if fine, no need for update
                                 //do nothing according to the algorithm
                             }else{
+                                //(s'.p>0.5)||(s'.p<0.5&&s'.d<s.d)
                                 double cost = fcost(A[j])+m*Math.min(A[j].p,1-A[j].p)+A[j].p*A[i].c;
                                 int index = findUnionIndex(A[i],A[j]);
                                 if(cost<A[index].c){
                                     A[index].c=cost;
+                                    //assigning s'&&s, reverse the order of status quo
                                     A[index].L=A[j];
                                     A[index].R=A[i];
                                 }
@@ -170,7 +179,7 @@ public class Main {
 
     //Returns true if the d-metric of any leaf node of B is dominating node A
     private static boolean compareLeave(Node A, Node B){
-        //return true if any leave node of B is dominating node A
+        //return true if any leave node of B is dominating(has a smaller cost of) node A
         ArrayList<Node> leaveNode = B.allLeave();
         for(Node a: leaveNode){
             if(Pair.dominate(d_metric(a),d_metric(A)))

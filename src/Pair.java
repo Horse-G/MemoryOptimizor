@@ -1,7 +1,7 @@
-/**
- * Created by Marshal on 4/13/15.
- */
+//Used for checking domination conditions in the case od c and d metrics
+
 public class Pair {
+
     double q;
     double p;
 
@@ -15,9 +15,9 @@ public class Pair {
     }
 
     //return comparison of two pairs
-    //only return true if both value stored in A is greater than B
+    //only return true if both value stored in A is less than B
     public static boolean dominate(Pair A, Pair B){
-        if(A.q>B.q&&A.p>B.p)
+        if(A.q<B.q&&A.p<B.p)
             return true;
         return false;
     }

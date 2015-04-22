@@ -2,4 +2,4 @@
 
 javac Main.java
 
-java Main args[0] args[1]
+java Main $1 $2
