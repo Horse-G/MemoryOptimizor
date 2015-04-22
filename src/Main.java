@@ -1,5 +1,3 @@
-import sun.awt.image.ImageWatched;
-
 import java.io.File;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -7,14 +5,12 @@ import java.util.ArrayList;
 
 public class Main {
 
-    //static int r=1,t=2,l=1,m=16,a=2,f=4;    //cost parameters
-    static int r,t,l,m,a,f;
-    static double[] S;
-    static int k;              //cardinality of S
-    static Node[] A=new Node[5];
+    static int r,t,l,m,a,f;     //Values of estimated costs that will be initialized from the config.txt file
+    static double[] S;          //Used for storing the selectivity for the basic terms read from the query.txt file
+    static int k;              //Cardinality of S
+    static Node[] A;           //Used for storing the 2^k sets in the form of Nodes
 
     public static void main(String[] args) {
-
 
         String configFile = "config.txt";
         String queryFile = "query.txt";
@@ -34,7 +30,7 @@ public class Main {
                     S[i]=Double.parseDouble(buffer[i]);
                 }
 
-                //initialize array A
+                //Initialize array A (Step 1 of the Algorithm)
                 A = new Node[(int)Math.pow(2,k)];
                 for(int i=0;i<A.length;i++){
                     A[i]=new Node();
@@ -54,7 +50,7 @@ public class Main {
                 //System.out.println("Step one result:=============");
                 //printNodeArray();
 
-                //second step update
+                //Step 2 of the Algorithm
                 for(int i=0;i<A.length;i++){
                     //i is the corresponding s in the algorithm
                     for(int j=0;j<A.length;j++){
@@ -92,8 +88,6 @@ public class Main {
 
                 String[] result = getResult(A[A.length - 1]);
 
-
-
                 //Standard format result output
                 System.out.println("==========================================");
                 System.out.println(input);
@@ -110,14 +104,10 @@ public class Main {
                 System.out.println("cost: "+A[A.length-1].c);
                 System.out.println("==========================================");
 
-
             }
         }catch(Exception e){
             System.err.println("Error: " + e.toString());
         }
-
-
-
 
     }
 
@@ -153,7 +143,6 @@ public class Main {
             resultString(result);
             return null;
         }
-
         result.push(node.L);
         result.push(new Node());
         result.push(node.R);
@@ -166,7 +155,6 @@ public class Main {
         }
        //printResult(result);
         return resultString(result);
-
     }
 
     //Returns the result in the form of a string
@@ -180,7 +168,6 @@ public class Main {
                 queue.pop();
             }
         }
-
         result[0] = queue.pop().toString();
         while(!queue.isEmpty()){
             if(queue.peek().n==0){
@@ -190,7 +177,6 @@ public class Main {
         }
         //System.out.println(result);
         return result;
-
     }
 
     //Prints the resultant plan
@@ -205,7 +191,6 @@ public class Main {
                 printNode(result.get(size-1-i));
             }
         }
-
     }
 
     //operator functions group
@@ -290,7 +275,6 @@ public class Main {
 */
         double result = node.n*r+(node.n-1)*l+node.n*f+t;
         return result;
-
     }
 
 
@@ -358,7 +342,5 @@ public class Main {
             }
             System.out.println();
         }
-
-
     }
 }
