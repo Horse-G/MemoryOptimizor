@@ -61,7 +61,7 @@ public class Main {
                         //make sure there is no intersection between two set
                         if(intersect(A[i].bitmap, A[j].bitmap))
                             continue;
-                        if(Pair.dominate(c_matrix(A[i].leftMostLeave()), c_matrix(A[j]))){
+                        if(Pair.dominate(c_metric(A[i].leftMostLeave()), c_metric(A[j]))){
                             //do nothing according to the algorithm
                         }else{
 
@@ -97,12 +97,12 @@ public class Main {
                 System.out.println("==========================================");
                 System.out.println(input);
                 System.out.println("------------------------------------------");
-                System.out.println("if("+result[0]+") {");
+                System.out.println("if"+result[0]+" {");
                 if(result[1]==null){
                     System.out.println("   answer[j++]=i;");
                 }else{
                     System.out.println("   answer[j]=i;");
-                    System.out.println("   j+=("+result[1]+");");
+                    System.out.println("   j+="+result[1]+";");
                 }
                 System.out.println("}");
                 System.out.println("------------------------------------------");
@@ -134,7 +134,7 @@ public class Main {
         //return true if any leave node of B is dominating node A
         ArrayList<Node> leaveNode = B.allLeave();
         for(Node a: leaveNode){
-            if(Pair.dominate(d_matrix(a),d_matrix(A)))
+            if(Pair.dominate(d_metric(a),d_metric(A)))
                 return true;
         }
         return false;
@@ -253,12 +253,12 @@ public class Main {
         return cost;
     }
 
-    private static Pair c_matrix(Node node){
+    private static Pair c_metric(Node node){
         Pair result = new Pair((node.p-1)/fcost(node),node.p);
         return result;
     }
 
-    private static Pair d_matrix(Node node){
+    private static Pair d_metric(Node node){
         Pair result = new Pair(fcost(node),node.p);
         return result;
     }
