@@ -140,7 +140,8 @@ public class Main {
         LinkedList<Node> result = new LinkedList<Node>();
         if(node.L==null&&node.R==null){
             result.push(node);
-            return resultString(result);
+            resultString(result);
+            return null;
         }
         result.push(node.L);
         result.push(new Node());
@@ -163,13 +164,9 @@ public class Main {
             //System.out.println(queue.peek().toString()+ "is no branching");
             result[1] = queue.pop().toString();
             //System.out.println("No Branching: " + NoBranching);
-            if(queue.size()!=0&&queue.peek().n==0){
+            if(queue.peek().n==0){
                 queue.pop();
             }
-        }
-        if(queue.size()==0){
-            result[0]=new Node().toString();
-            return result;
         }
         result[0] = queue.pop().toString();
         while(!queue.isEmpty()){
@@ -256,15 +253,22 @@ public class Main {
         return cost;
     }
 
-
-    //Calculates c-metric
+<<<<<<< HEAD
     private static Pair c_metric(Node node){
+=======
+    //Calculates c-metric
+    private static Pair c_matrix(Node node){
+>>>>>>> 7f1cb5b972195840c991e7e1e4ec8cba10a51a11
         Pair result = new Pair((node.p-1)/fcost(node),node.p);
         return result;
     }
 
-    //Calculates d-metric
+<<<<<<< HEAD
     private static Pair d_metric(Node node){
+=======
+    //Calculates d-metric
+    private static Pair d_matrix(Node node){
+>>>>>>> 7f1cb5b972195840c991e7e1e4ec8cba10a51a11
         Pair result = new Pair(fcost(node),node.p);
         return result;
     }
